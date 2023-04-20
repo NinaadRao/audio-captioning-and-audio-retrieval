@@ -1,6 +1,6 @@
 trial_series: /home/ubuntu/dcase2023-audio-retrieval/output/
 
-trial_base: /home/ubuntu/dcase2023-audio-retrieval/output/
+trial_base: clap_roberta
 
 
 
@@ -11,27 +11,27 @@ data_conf:
         dataset: /home/ubuntu/audio-captioning-and-audio-retrieval/openl3_model/data/data/Clotho
         audio_data: development_audio_logmels_clap.hdf5
         text_data: development_text.csv
-        text_embeds: sbert_embeds.pkl
+        text_embeds: roberta_embeds.pkl
         text_level: sentence
 
     val_data: # validation data
         dataset: /home/ubuntu/audio-captioning-and-audio-retrieval/openl3_model/data/data/Clotho
         audio_data: validation_audio_logmels_clap.hdf5
         text_data: validation_text.csv
-        text_embeds: sbert_embeds.pkl
+        text_embeds: roberta_embeds.pkl
         text_level: sentence
 
     eval_data: # evaluation data
         dataset: /home/ubuntu/audio-captioning-and-audio-retrieval/openl3_model/data/data/Clotho
         audio_data: evaluation_audio_logmels_clap.hdf5
         text_data: evaluation_text.csv
-        text_embeds: sbert_embeds.pkl
+        text_embeds: roberta_embeds.pkl
         text_level: sentence
 
 
 # Configure hyper-parameters
 param_conf:
-    num_epoch: 80
+    num_epoch: 30
     batch_size: 32
     model: DualEncoderModel
     criterion: infonce_loss

@@ -90,9 +90,9 @@ def eval(model, data_loader, criterion):
     return eval_loss / max(eval_steps, 1)
 
 
-def restore(model, ckp_dir):
+def restore(model, ckp_dir,epoch):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model_state, optimizer_state = torch.load(os.path.join(ckp_dir, "checkpoint"),
+    model_values = torch.load(os.path.join(ckp_dir, str(epoch)+".pth"),
                                               map_location=device)
-    model.load_state_dict(model_state)
+    model.load_state_dict(model_values["model_state_dict"])
     return model

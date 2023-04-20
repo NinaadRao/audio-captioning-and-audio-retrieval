@@ -7,6 +7,7 @@ from dbm import dumb
 import nltk
 import torch
 import sys
+import gc
 sys.path.append("/home/ubuntu/audio-captioning-and-audio-retrieval/openl3_model/")
 from utils import criterion_utils, data_utils, model_utils
 
@@ -19,7 +20,7 @@ stopwords = nltk.corpus.stopwords.words("english")
 trial_base = "/home/ubuntu/results/"
 trial_series = "~"
 trial_name = "~"
-ckp_dir = "clap"
+ckp_dir = "clap_roberta"
 
 # Model checkpoint directory
 ckp_fpath = os.path.join(trial_base, ckp_dir)
@@ -47,6 +48,8 @@ print(model)
 model.eval()
 
 for name, ds in zip(["train", "val", "eval"], [train_ds, val_ds, eval_ds]):
+    torch.cuda.empty_cache()
+    gc.collect()
     text2vec = {}
     for idx in ds.text_data.index:
         item = ds.text_data.iloc[idx]
@@ -62,6 +65,11 @@ for name, ds in zip(["train", "val", "eval"], [train_ds, val_ds, eval_ds]):
     # Compute pairwise cross-modal scores
     score_fpath = os.path.join(ckp_fpath, f"{name}_xmodal_scores.db")
     print(name)
+    vec2embed = {}
+    for tid in text2vec:
+        text_embed = model.text_branch(text2vec[tid])[0]  # Encode text data
+        vec2embed[tid] = text_embed
+
     with shelve.open(filename=score_fpath, flag="n", protocol=2) as stream:
         for fid in ds.text_data["fid"].unique():
             print('fid',fid)
@@ -73,8 +81,7 @@ for name, ds in zip(["train", "val", "eval"], [train_ds, val_ds, eval_ds]):
             audio_embed = model.audio_branch(audio_vec)[0]
 
             for tid in text2vec:
-                text_embed = model.text_branch(text2vec[tid])[0]  # Encode text data
-                xmodal_S = criterion_utils.score(audio_embed, text_embed, obj_params["args"].get("dist", "dot_product"))
+                xmodal_S = criterion_utils.score(audio_embed, vec2embed[tid], obj_params["args"].get("dist", "dot_product"))
                 group_scores[tid] = xmodal_S.item()
             stream[fid] = group_scores
     print("Save", score_fpath)

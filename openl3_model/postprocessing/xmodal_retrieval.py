@@ -12,16 +12,15 @@ dbm._defaultmod = dumb
 dbm._modules = {"dbm.dumb": dumb}
 
 # Trial info
-trial_base = "~"
+trial_base = "/home/ubuntu/results/"
 trial_series = "~"
 trial_name = "~"
-ckp_dir = "~"
-
+ckp_dir = "clap_roberta"
 # Model checkpoint directory
-ckp_fpath = os.path.join(trial_base, trial_series, trial_name, ckp_dir)
-
+ckp_fpath = os.path.join(trial_base, ckp_dir)
 # Load trial parameters
-conf_fpath = os.path.join(trial_base, trial_series, trial_name, "params.json")
+conf_fpath = os.path.join("/home/ubuntu/audio-captioning-and-audio-retrieval/openl3_model/postprocessing/params.json")
+
 with open(conf_fpath, "rb") as store:
     conf = json.load(store)
 print("Load", conf_fpath)
@@ -94,7 +93,7 @@ for name in data_conf:
             group_scores = stream[fid]
 
             # Audio2Text retrieval
-            fid2items[fid] = [(tid, group_scores[tid], tid2fid[tid] == fid) for tid in group_scores]
+            #fid2items[fid] = [(tid, group_scores[tid], tid2fid[tid] == fid) for tid in group_scores]
 
             # Text2Audio retrieval
             for tid in group_scores:
@@ -104,7 +103,7 @@ for name in data_conf:
                     tid2items[tid].append((fid, group_scores[tid], tid2fid[tid] == fid))
 
         print("Audio2Text retrieval")
-        measure(fid2items)
+        #measure(fid2items)
         print("Text2Audio retrieval")
         measure(tid2items)
 
