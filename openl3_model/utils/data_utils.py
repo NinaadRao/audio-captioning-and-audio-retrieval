@@ -43,6 +43,7 @@ class AudioTextDataset(Dataset):
 
     def __getitem__(self, index):
         item = self.text_data.iloc[index]
+        #print(item)
 
         audio_vec = torch.as_tensor(self.audio_data[item["fid"]][()])
 
@@ -119,6 +120,7 @@ def load_data(conf):
         if len(text_vocab) == 0:
             text_vocab.add_key("<pad>", np.zeros_like(text_embeds[key]))
         text_vocab.add_key(key, text_embeds[key])
+    print(len(text_vocab.key2id),len(audio_data))
 
     # Enclose data
     kwargs = {"audio_data": audio_data, "text_data": text_data, "text_vocab": text_vocab, "text_level": text_level}

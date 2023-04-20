@@ -5,7 +5,7 @@ import pandas as pd
 from sentence_transformers import SentenceTransformer
 
 global_params = {
-    "dataset_dir": "~/Clotho",
+    "dataset_dir": "/home/ubuntu/audio-captioning-and-audio-retrieval/openl3_model/data/data/Clotho",
     "audio_splits": ["development", "validation", "evaluation"]
 }
 

@@ -13,11 +13,8 @@ class DualEncoderModel(nn.Module):
     def __init__(self, *args, **kwargs):
         super(DualEncoderModel, self).__init__()
 
-        settings = load_yaml_file(Path('bart.yaml'))
-        if torch.cuda.is_available() and not settings['training']['force_cpu']:
-            device = torch.device('cuda')
-        else:
-            device = torch.device('cpu')
+        #settings = load_yaml_file(Path('bart.yaml'))
+        
 
         self.out_norm = kwargs.get("out_norm", None)
         self.audio_enc = getattr(audio_encoders, args[0], None)(**kwargs["audio_enc"])

@@ -9,6 +9,7 @@ import yaml
 from torch.utils.data import DataLoader
 import wandb
 wandb.login(key="6303eb738fdf6199f76497134963d53a7f8cd9be")
+wandb.login(key="6303eb738fdf6199f76497134963d53a7f8cd9be")
 from utils import criterion_utils, data_utils, model_utils
 
 torch.manual_seed(0)
@@ -62,7 +63,7 @@ def exec_trial(conf, run, ckp_dir=None):
 
     max_epoch = param_conf["num_epoch"] + 1
     best_results = 0
-
+    
     for epoch in numpy.arange(0, max_epoch):
 
         if epoch > 0:
@@ -72,6 +73,10 @@ def exec_trial(conf, run, ckp_dir=None):
         epoch_results["train_obj"] = model_utils.eval(model, train_dl, objective)
         epoch_results["val_obj"] = model_utils.eval(model, val_dl, objective)
         epoch_results["eval_obj"] = model_utils.eval(model, eval_dl, objective)
+        curr_lr = float(optimizer.param_groups[0]['lr'])
+        print("\nEpoch: {}/{}".format(epoch, max_epoch))
+        print("\tTrain Loss {:.04f}\t Learning Rate {:.07f}".format(epoch_results["train_obj"], curr_lr))
+        print("\tEval loss {:.04f}%\t Val Loss {:.04f}".format(epoch_results['eval_obj'], epoch_results['val_obj']))
 
         epoch_results["stop_metric"] = epoch_results["val_obj"]
         wandb.log(epoch_results)
@@ -96,6 +101,7 @@ def exec_trial(conf, run, ckp_dir=None):
         #
         # # Send the current statistics back to the Ray cluster
         # tune.report(**epoch_results)
+    run.finish()
 
 
 # Main
@@ -124,7 +130,7 @@ if __name__ == "__main__":
         reinit=True,  ### Allows reinaitalizing runs when you re-run this cell
         # run_id = ### Insert specific run id here if you want to resume a previous run
         # resume = "must" ### You need this to resume previous runs, but comment out reinit = True when using this
-        project="hw3p2-ablations",  ### Project should be created in your wandb account
+        project="audio-captioning",  ### Project should be created in your wandb account
         config=conf  ### Wandb Config for your run
     )
     exec_trial(conf, run, ckp_dir=None)

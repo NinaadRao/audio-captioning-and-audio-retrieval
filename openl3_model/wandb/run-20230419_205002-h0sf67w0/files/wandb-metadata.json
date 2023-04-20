@@ -1,0 +1,65 @@
+{
+    "os": "Linux-5.15.0-1033-aws-x86_64-with-glibc2.29",
+    "python": "3.8.10",
+    "heartbeatAt": "2023-04-19T20:50:03.227289",
+    "startedAt": "2023-04-19T20:50:02.664219",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "main.py",
+    "codePath": "openl3_model/main.py",
+    "git": {
+        "remote": "git@github.com:NinaadRao/audio-captioning-and-audio-retrieval.git",
+        "commit": "9ef83080c3e821df95bba4fb1e73fc62a55c8a51"
+    },
+    "email": null,
+    "root": "/home/ubuntu/audio-captioning-and-audio-retrieval",
+    "host": "ip-172-31-13-204",
+    "username": "ubuntu",
+    "executable": "/usr/bin/python3",
+    "cpu_count": 2,
+    "cpu_count_logical": 4,
+    "cpu_freq": {
+        "current": 2649.4255,
+        "min": 0.0,
+        "max": 0.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2499.998,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3097.708,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2499.998,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2499.998,
+            "min": 0.0,
+            "max": 0.0
+        }
+    ],
+    "disk": {
+        "total": 193.8060760498047,
+        "used": 103.61610412597656
+    },
+    "gpu": "Tesla T4",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "Tesla T4",
+            "memory_total": 16106127360
+        }
+    ],
+    "memory": {
+        "total": 15.337417602539062
+    }
+}
