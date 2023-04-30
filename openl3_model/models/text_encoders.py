@@ -16,7 +16,7 @@ class SentBERTBaseEncoder(nn.Module):
         for param in self.embedding.parameters():
             param.requires_grad = False
 
-        self.fc = nn.Linear(768, kwargs["out_dim"], bias=True)
+        self.fc = nn.Linear(768, 300, bias=True)
         self.fc.apply(init_weights)
 
     def forward(self, x):

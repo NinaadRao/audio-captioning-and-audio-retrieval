@@ -20,7 +20,7 @@ stopwords = nltk.corpus.stopwords.words("english")
 trial_base = "/home/ubuntu/results/"
 trial_series = "~"
 trial_name = "~"
-ckp_dir = "clap_roberta"
+ckp_dir = "ast_roberta"
 
 # Model checkpoint directory
 ckp_fpath = os.path.join(trial_base, ckp_dir)
@@ -79,6 +79,7 @@ for name, ds in zip(["train", "val", "eval"], [train_ds, val_ds, eval_ds]):
             audio_vec = torch.as_tensor(ds.audio_data[fid][()])
             audio_vec = torch.unsqueeze(audio_vec, dim=0)
             audio_embed = model.audio_branch(audio_vec)[0]
+            #print(audio_embed.size())
 
             for tid in text2vec:
                 xmodal_S = criterion_utils.score(audio_embed, vec2embed[tid], obj_params["args"].get("dist", "dot_product"))

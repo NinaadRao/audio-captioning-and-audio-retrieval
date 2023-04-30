@@ -15,7 +15,7 @@ dbm._modules = {"dbm.dumb": dumb}
 trial_base = "/home/ubuntu/results/"
 trial_series = "~"
 trial_name = "~"
-ckp_dir = "clap_roberta"
+ckp_dir = "ast_roberta"
 # Model checkpoint directory
 ckp_fpath = os.path.join(trial_base, ckp_dir)
 # Load trial parameters

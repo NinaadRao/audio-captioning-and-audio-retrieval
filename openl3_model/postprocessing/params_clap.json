@@ -1,0 +1,72 @@
+{
+
+  "data_conf": {
+    "eval_data": {
+      "audio_data": "evaluation_audio_logmels_openl3.hdf5",
+      "dataset": "/home/ubuntu/audio-captioning-and-audio-retrieval/openl3_model/data/data/Clotho/",
+      "text_data": "evaluation_text.csv",
+      "text_embeds": "sbert_embeds.pkl",
+      "text_level": "sentence"
+    },
+    "train_data": {
+      "audio_data": "development_audio_logmels_openl3.hdf5",
+      "dataset": "/home/ubuntu/audio-captioning-and-audio-retrieval/openl3_model/data/data/Clotho/",
+      "text_data": "development_text.csv",
+      "text_embeds": "sbert_embeds.pkl",
+      "text_level": "sentence"
+    },
+    "val_data": {
+      "audio_data": "validation_audio_logmels_openl3.hdf5",
+      "dataset": "/home/ubuntu/audio-captioning-and-audio-retrieval/openl3_model/data/data/Clotho/",
+      "text_data": "validation_text.csv",
+      "text_embeds": "sbert_embeds.pkl",
+      "text_level": "sentence"
+    }
+  },
+  "ReduceLROnPlateau": {
+    "args": {
+      "factor": 0.1,
+      "min_lr": 1e-06,
+      "mode": "min",
+      "patience": 5,
+      "threshold": 0.005,
+      "threshold_mode": "abs",
+      "verbose": true
+    },
+    "name": "ReduceLROnPlateau"
+  },
+  "criteria": {
+    "infonce_loss": {
+      "args": {
+        "dist": "dot_product",
+        "temperature": 0.07
+      },
+      "name": "LogSoftmaxLoss"
+    }
+  },
+   "DualEncoderModel": {
+    "audio_enc": {
+      "init": "nonprior",
+      "name": "BARTAAC",
+      "out_dim": 300,
+      "trainable": true,
+      "weight": "/home/ubuntu/dcase2023-audio-retrieval/data/pretrained_models/CNN14_300.pth"
+    },
+    "name": "DualEncoderModel",
+    "out_norm": "L2",
+    "text_enc": {
+      "init": "prior",
+      "name": "SentBERTBaseEncoder",
+      "out_dim": 300
+    }
+  },
+  "param_conf": {
+    "batch_size": 32,
+    "criterion": "infonce_loss",
+    "lr_scheduler": "ReduceLROnPlateau",
+    "model": "DualEncoderModel",
+    "num_epoch": 80,
+    "optimizer": "AdamOptimizer"
+  },
+  "epoch": "6"
+}

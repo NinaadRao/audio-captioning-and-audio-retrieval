@@ -58,53 +58,13 @@ def exec_trial(conf, ckp_dir=None):
     lr_scheduler = getattr(optim.lr_scheduler, lr_params["name"], "ReduceLROnPlateau")(optimizer, **lr_params["args"])
 
     if ckp_dir is not None:
-        result = torch.load(os.path.join(ckp_dir, "17.pth"))
-        model.load_state_dict(result['model_state_dict'])
-        #optimizer.load_state_dict(optimizer_state)
-
-        torch.save({'model_state_dict':model.audio_enc.state_dict()},'/home/ubuntu/results/clap/'+'audio_encoder'+'.pth')
+        model_state, optimizer_state = torch.load(os.path.join(ckp_dir, "17"))
+        model.load_state_dict(model_state)
+        optimizer.load_state_dict(optimizer_state)
+        torch.save({'model_state_dict':model_state},path+'audio_encoder'+'.pth')
 
     max_epoch = param_conf["num_epoch"] + 1
     best_results = 1e30
-    for epoch in numpy.arange(0, max_epoch):
-
-        if epoch > 0:
-            model_utils.train(model, train_dl, objective, optimizer)
-
-        epoch_results = {}
-        epoch_results["train_obj"] = model_utils.eval(model, train_dl, objective)
-        epoch_results["val_obj"] = model_utils.eval(model, val_dl, objective)
-        epoch_results["eval_obj"] = model_utils.eval(model, eval_dl, objective)
-        curr_lr = float(optimizer.param_groups[0]['lr'])
-        print("\nEpoch: {}/{}".format(epoch, max_epoch))
-        print("\tTrain Loss {:.04f}\t Learning Rate {:.07f}".format(epoch_results["train_obj"], curr_lr))
-        print("\tEval loss {:.04f}%\t Val Loss {:.04f}".format(epoch_results['eval_obj'], epoch_results['val_obj']))
-
-        epoch_results["stop_metric"] = epoch_results["val_obj"]
-        wandb.log(epoch_results)
-        if epoch_results['val_obj'] <  best_results:
-            print("Saving best model")
-            best_results = epoch_results['val_obj']
-            save_model(model, optimizer, lr_scheduler, best_results, epoch, '/home/ubuntu/results/'+model_type+'/')
-            artifact = wandb.Artifact('model_artifact_audio', type='model')
-            best_model_path = '/home/ubuntu/results/'+model_type+'/'+str(epoch)+'.pth'
-            artifact.add_file(best_model_path)
-
-
-
-
-        # Reduce learning rate w.r.t validation loss
-        lr_scheduler.step(epoch_results["stop_metric"])
-
-
-        # Save the model to the trial directory: local_dir/exp_name/trial_name/checkpoint_<step>
-        # with tune.checkpoint_dir(step=epoch) as ckp_dir:
-        #     path = os.path.join(ckp_dir, "checkpoint")
-        #     torch.save((model.state_dict(), optimizer.state_dict()), path)
-        #
-        # # Send the current statistics back to the Ray cluster
-        # tune.report(**epoch_results)
-    run.finish()
     
     
 

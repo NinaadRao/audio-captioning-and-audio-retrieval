@@ -27,7 +27,7 @@ def save_model(model, optimizer, scheduler, metric, epoch, path):
         path+str(epoch)+'.pth'
     )
 
-def exec_trial(conf, ckp_dir=None):
+def exec_trial(conf, run, ckp_dir=None):
     data_conf = conf["data_conf"]
     param_conf = conf["param_conf"]
     model_type = conf["trial_base"]
@@ -58,14 +58,13 @@ def exec_trial(conf, ckp_dir=None):
     lr_scheduler = getattr(optim.lr_scheduler, lr_params["name"], "ReduceLROnPlateau")(optimizer, **lr_params["args"])
 
     if ckp_dir is not None:
-        result = torch.load(os.path.join(ckp_dir, "17.pth"))
-        model.load_state_dict(result['model_state_dict'])
-        #optimizer.load_state_dict(optimizer_state)
-
-        torch.save({'model_state_dict':model.audio_enc.state_dict()},'/home/ubuntu/results/clap/'+'audio_encoder'+'.pth')
+        model_state, optimizer_state = torch.load(os.path.join(ckp_dir, "checkpoint"))
+        model.load_state_dict(model_state)
+        optimizer.load_state_dict(optimizer_state)
 
     max_epoch = param_conf["num_epoch"] + 1
     best_results = 1e30
+    
     for epoch in numpy.arange(0, max_epoch):
 
         if epoch > 0:
@@ -105,8 +104,7 @@ def exec_trial(conf, ckp_dir=None):
         # # Send the current statistics back to the Ray cluster
         # tune.report(**epoch_results)
     run.finish()
-    
-    
+
 
 # Main
 if __name__ == "__main__":
@@ -129,7 +127,6 @@ if __name__ == "__main__":
 
 
     # Execute trials - local_dir/exp_name/trial_name
-    '''
     run = wandb.init(
         name=conf['trial_base'],  ## Wandb creates random run names if you skip this field
         reinit=True,  ### Allows reinaitalizing runs when you re-run this cell
@@ -138,5 +135,4 @@ if __name__ == "__main__":
         project="audio-captioning",  ### Project should be created in your wandb account
         config=conf  ### Wandb Config for your run
     )
-    '''
-    exec_trial(conf, ckp_dir=None)
+    exec_trial(conf, run, ckp_dir=None)
