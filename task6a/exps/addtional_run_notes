@@ -1,0 +1,76 @@
+	- https://github.com/wsntxxn/AudioCaption
+	- https://dcase.community/documents/challenge2022/technical_reports/DCASE2022_Xu_106_t6a.pdf
+	- https://dcase.community/challenge2022/task-automatic-audio-captioning-results#xu2022_t6a
+
+
+How to run code
+Training 	python captioning/pytorch_runners/run.py train configs/clotho_v2/waveform/cnn14rnn_trm.yaml
+Evaluation	python captioning/pytorch_runners/run.py evaluate $EXP_PATH configs/clotho_v2/waveform/test.yaml 
+Ensemble	python captioning/pytorch_runners/ensemble.py evaluate configs/dcase2022/ensemble/config.yaml
+
+How to download AudioSet data if required (Didn't need to do it)
+https://github.com/cdjkim/audiocaps/issues/9
+
+Steps
+	1. Clone repo
+	2. Install dependencies
+	3. Follow the steps to incorporate clotho by looking at README in data folder
+		a. wget the files from zenodo
+		b. unzip (https://askubuntu.com/questions/219392/how-can-i-uncompress-a-7z-file)
+
+
+Issues and fixes
+	1. Need to add the following things to requirements.txt
+		a. torchaudio==0.8.1
+		b. resampy==0.3.1
+		c. Tensorboard
+		d. Matplotlib==3.6
+		e. Pandas==1.4.3
+		f. Tqdm==4.42.1
+	2. Traceback (most recent call last):
+	  File "/home/ubuntu/.local/lib/python3.8/site-packages/soundfile.py", line 161, in <module>
+	    import _soundfile_data  # ImportError if this doesn't exist
+	ModuleNotFoundError: No module named '_soundfile_data'
+	
+	During handling of the above exception, another exception occurred:
+	
+	Traceback (most recent call last):
+	  File "/home/ubuntu/.local/lib/python3.8/site-packages/soundfile.py", line 170, in <module>
+	    raise OSError('sndfile library not found using ctypes.util.find_library')
+	OSError: sndfile library not found using ctypes.util.find_library
+	
+	During handling of the above exception, another exception occurred:
+	
+	Traceback (most recent call last):
+	  File "captioning/pytorch_runners/run.py", line 14, in <module>
+	    import captioning.models.encoder
+	  File "/home/ubuntu/audio_captioning/AudioCaption/captioning/models/encoder.py", line 9, in <module>
+	    from torchaudio import transforms
+	  File "/home/ubuntu/.local/lib/python3.8/site-packages/torchaudio/__init__.py", line 15, in <module>
+	    from torchaudio.backend import (
+	  File "/home/ubuntu/.local/lib/python3.8/site-packages/torchaudio/backend/__init__.py", line 2, in <module>
+	    from . import utils
+	  File "/home/ubuntu/.local/lib/python3.8/site-packages/torchaudio/backend/utils.py", line 7, in <module>
+	    from . import (
+	  File "/home/ubuntu/.local/lib/python3.8/site-packages/torchaudio/backend/soundfile_backend.py", line 15, in <module>
+	    import soundfile
+	  File "/home/ubuntu/.local/lib/python3.8/site-packages/soundfile.py", line 192, in <module>
+	    _snd = _ffi.dlopen(_explicit_libname)
+	OSError: cannot load library 'libsndfile.so': libsndfile.so: cannot open shared object file: No such file or directory
+	
+	Fix -  sudo apt-get install libsndfile-dev 
+	3. Traceback (most recent call last):
+	  File "captioning/pytorch_runners/run.py", line 14, in <module>
+	    import captioning.models.encoder
+	  File "/home/ubuntu/audio_captioning/AudioCaption/captioning/models/encoder.py", line 10, in <module>
+	    from torchlibrosa.augmentation import SpecAugmentation
+	ModuleNotFoundError: No module named 'torchlibrosa'
+	Fix - pip3 install librosa==0.7.0
+	         pip3 install torchlibrosa==0.0.7
+	4. Install torchaudio 0.10.1 not 0.8.1 as transforms.MelSpectrogram does not work otherwise
+	5. FileNotFoundError: [Errno 2] No such file or directory: 'sed/audioset_tagging_cnn/pretrained_weights/Cnn14_mAP=0.431.pth'
+		a.  mkdir -p sed/audioset_tagging_cnn/pretrained_weights/
+		b. wget -O Cnn14_mAP=0.431.pth https://zenodo.org/record/3987831/files/Cnn14_mAP%3D0.431.pth
+	6. ModuleNotFoundError: No module named 'fense'
+		a. Install https://github.com/blmoistawinde/fense
+		b. Fense - Fluency Enhance Sentence-bert Evaluation

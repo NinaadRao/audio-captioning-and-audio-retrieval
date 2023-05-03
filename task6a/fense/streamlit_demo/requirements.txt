@@ -1,0 +1,12 @@
+tqdm
+numpy
+pandas
+torch
+requests
+scikit-learn
+matplotlib
+transformers
+sentence_transformers
+streamlit
+protobuf
+git+https://github.com/blmoistawinde/fense.git@main
