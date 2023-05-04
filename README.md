@@ -11,4 +11,5 @@ The repository has been divided into 2 separate sections.
 2. The second task i.e. the audio retrieval task is present in task6b/. The base repository can be found here: https://github.com/xieh97/dcase2023-audio-retrieval
 
     a. Run the corresponding main files and change the conf.yaml file to consider the required embeddings.
+    
     b. Additional instructions to run the repository can be found in task6b/README.md.
