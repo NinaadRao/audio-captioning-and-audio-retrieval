@@ -7,7 +7,7 @@ tqdm==4.36.1
 nltk==3.9.4
 fire==0.2.1
 zhon==1.1.5
-PyYAML==5.1.2
+PyYAML==5.4
 gensim==3.8.3
 h5py==3.1.0
 pypeln==0.4.7
